@@ -134,7 +134,7 @@ public class MainMenu {
                     Date checkOutDate = getDate(userInput,dateFormat);
                     if (checkOutDate.after(checkInDate)){
                         check = true;
-                        System.out.println(checkOutDate);
+                        //System.out.println(checkOutDate);
                         return checkOutDate;
                     }
                 }
@@ -144,9 +144,53 @@ public class MainMenu {
         }
         return null;
     }
-    public static Customer checkCustomer(Scanner userInput){
-        System.out.println("Do you have an account associated with our hotel? (y/n)");
-        String accinput = userInput.nextLine();
+    public static Customer checkCustomer(Scanner userInput) {
+        try {
+            System.out.println("Do you have an account associated with our hotel? (y/n)");
+            String accinput = userInput.nextLine();
+            if (accinput.equals("y") || accinput.equals("n")) {
+                if (accinput.equalsIgnoreCase("y")) {
+                    System.out.println("Please enter your email address:");
+                    String useremail = userInput.nextLine();
+                    if (hotelResource.getCustomer(useremail) == null) {
+                        System.out.println("Sorry cannot find the account.");
+                        return addNewCustomer();
+                    } else {
+                        return hotelResource.getCustomer(useremail);
+                    }
+                } else if (accinput.equalsIgnoreCase("n")) {
+                    try {
+                        System.out.println("Would you like to set up an account with us?(y/n)");
+                        String accSetInput = userInput.nextLine();
+                        if (accSetInput.equals("y") || accSetInput.equals("n")) {
+                            if (accSetInput.equalsIgnoreCase("y")) {
+                                return addNewCustomer();
+                            }
+                            if (accSetInput.equalsIgnoreCase("n")) {
+                                return null;
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Please enter 'y' or 'n'!");
+                    }
+
+                }
+
+
+            }
+
+        }
+        catch(Exception e){
+            System.out.println("Please enter 'y' or 'n'!");
+        }
+        return null;
+    }
+
+
+
+/*        if (!accinput.equals("y")&& !accinput.equals("n")){
+        System.out.println("Please enter 'y' or 'n'!");}
+
         if (accinput.equalsIgnoreCase("y")){
             System.out.println("Please enter your email address:");
             String useremail = userInput.nextLine();
@@ -161,21 +205,33 @@ public class MainMenu {
         else if (accinput.equalsIgnoreCase("n")){
                 System.out.println("Would you like to set up an account with us?(y/n)");
                 String accSetInput = userInput.nextLine();
-                if (accSetInput.equalsIgnoreCase("y")){
+            if (!accSetInput.equals("y")&& !accSetInput.equals("n")){
+                throw new IllegalArgumentException("Please enter 'y' or 'n'!");}
+            if (accSetInput.equalsIgnoreCase("y")){
                     return addNewCustomer();
                 }
             }
         return null;
-    }
+    }*/
+
+
+
 
     // Find a room and reserve it
     public static void findARoom(){
         boolean keep = false;
         Scanner userInput = new Scanner(System.in);
         Date checkInDate = getCheckIndate(userInput);
+        //check data
+        System.out.println(checkInDate);
         Date checkOutDate = getCheckOutdate(userInput,checkInDate);
+        System.out.println(checkOutDate);
         Customer customer = checkCustomer(userInput);
-        Collection<IRoom> availableRoom = hotelResource.findARoom(checkInDate,checkOutDate);
+        if (customer.equals(null)){
+            System.out.println("Sorry no account found!");
+            return;
+        }
+        Collection<IRoom> availableRoom = new ArrayList<>(hotelResource.findARoom(checkInDate,checkOutDate));
         if (availableRoom.isEmpty()){
             System.out.println("There is no available rooms,please use alternative dates.");
             Calendar newCheckInDate = new GregorianCalendar();
@@ -186,14 +242,14 @@ public class MainMenu {
             newCheckOutDate.add(newCheckOutDate.DATE,7);
             checkInDate = newCheckInDate.getTime();
             checkOutDate = newCheckOutDate.getTime();
-            availableRoom = hotelResource.findARoom(checkInDate,checkOutDate);
-            if (availableRoom.isEmpty()){
+            Collection<IRoom> newRooms = new ArrayList<>(hotelResource.findARoom(checkInDate,checkOutDate));
+            if (newRooms.isEmpty()){
                 System.out.println("Sorry, no rooms are found, please entry another date.");
 
             }
             else {
                 System.out.println("Here are recommend rooms with 7-days delay");
-                for(IRoom room :availableRoom) {
+                for(IRoom room :newRooms) {
                     System.out.println(room);
                 }
             }
