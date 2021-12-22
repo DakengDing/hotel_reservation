@@ -145,44 +145,52 @@ public class MainMenu {
         return null;
     }
     public static Customer checkCustomer(Scanner userInput) {
-        try {
-            System.out.println("Do you have an account associated with our hotel? (y/n)");
-            String accinput = userInput.nextLine();
-            if (accinput.equals("y") || accinput.equals("n")) {
-                if (accinput.equalsIgnoreCase("y")) {
-                    System.out.println("Please enter your email address:");
-                    String useremail = userInput.nextLine();
-                    if (hotelResource.getCustomer(useremail) == null) {
-                        System.out.println("Sorry cannot find the account.");
-                        return addNewCustomer();
-                    } else {
-                        return hotelResource.getCustomer(useremail);
-                    }
-                } else if (accinput.equalsIgnoreCase("n")) {
-                    try {
-                        System.out.println("Would you like to set up an account with us?(y/n)");
-                        String accSetInput = userInput.nextLine();
-                        if (accSetInput.equals("y") || accSetInput.equals("n")) {
-                            if (accSetInput.equalsIgnoreCase("y")) {
-                                return addNewCustomer();
-                            }
-                            if (accSetInput.equalsIgnoreCase("n")) {
-                                return null;
-                            }
+        boolean keep2 = false;
+        boolean keep = false;
+        do {
+            keep = false;
+            try {
+                System.out.println("Do you have an account associated with our hotel? (y/n)");
+                String accinput = userInput.nextLine();
+                if (accinput.equals("y") || accinput.equals("n")) {
+                    if (accinput.equalsIgnoreCase("y")) {
+                        System.out.println("Please enter your email address:");
+                        String useremail = userInput.nextLine();
+                        if (hotelResource.getCustomer(useremail) == null) {
+                            System.out.println("Sorry cannot find the account.");
+                            return addNewCustomer();
+                        } else {
+                            return hotelResource.getCustomer(useremail);
                         }
-                    } catch (Exception e) {
-                        System.out.println("Please enter 'y' or 'n'!");
+                    } else if (accinput.equalsIgnoreCase("n")) {
+
+                        do {
+                            keep2 =false;
+                            try {
+                                System.out.println("Would you like to set up an account with us?(y/n)");
+                                String accSetInput = userInput.nextLine();
+                                if (accSetInput.equals("y") || accSetInput.equals("n")) {
+                                    if (accSetInput.equalsIgnoreCase("y")) {
+                                        return addNewCustomer();
+                                    }
+                                    if (accSetInput.equalsIgnoreCase("n")) {
+                                        return null;
+                                    }
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Please enter 'y' or 'n'!");
+                                keep2 = true;
+                            }
+                        }while (keep2);
                     }
-
                 }
-
-
             }
+            catch(Exception e){
+                System.out.println("Please enter 'y' or 'n'!");
+                keep = true;
+            }
+        } while (keep);
 
-        }
-        catch(Exception e){
-            System.out.println("Please enter 'y' or 'n'!");
-        }
         return null;
     }
 
@@ -227,11 +235,10 @@ public class MainMenu {
         Date checkOutDate = getCheckOutdate(userInput,checkInDate);
         System.out.println(checkOutDate);
         Customer customer = checkCustomer(userInput);
-        if (customer.equals(null)){
-            System.out.println("Sorry no account found!");
-            return;
-        }
         Collection<IRoom> availableRoom = new ArrayList<>(hotelResource.findARoom(checkInDate,checkOutDate));
+        for (IRoom aRoom : availableRoom){
+            System.out.println(aRoom);
+        }
         if (availableRoom.isEmpty()){
             System.out.println("There is no available rooms,please use alternative dates.");
             Calendar newCheckInDate = new GregorianCalendar();
@@ -249,9 +256,26 @@ public class MainMenu {
             }
             else {
                 System.out.println("Here are recommend rooms with 7-days delay");
+                System.out.println("Dates: " + checkInDate + "-" + checkOutDate + "\n");
                 for(IRoom room :newRooms) {
                     System.out.println(room);
                 }
+                do {
+                    keep = false;
+                    System.out.println("Please select one room:");
+                    String userSelection = userInput.nextLine();
+                    if (newRooms.contains(hotelResource.getRoom(userSelection))){
+                        IRoom userRoom = hotelResource.getRoom(userSelection);
+                        hotelResource.bookARoom(customer.getEmail(),userRoom,checkInDate,checkOutDate);
+                        System.out.println("Room " + userRoom +" reserve success!");
+
+                    }
+                    else {
+                        System.out.println("Sorry, please select one room from above.");
+                        keep = true;
+                    }
+
+                } while (keep);
             }
         }
         else {
@@ -293,7 +317,10 @@ public class MainMenu {
                 System.out.println("Sorry You do not have reservations.");
             }
             else {
-                System.out.println(customerReservation);
+                for (Reservation cusRes:customerReservation){
+                    System.out.println(cusRes);
+                }
+
 
                 return customerReservation;
             }

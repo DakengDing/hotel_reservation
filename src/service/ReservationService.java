@@ -9,7 +9,7 @@ import java.util.*;
 public class ReservationService {
     public Set<IRoom> rooms = new HashSet<IRoom>();
     public Set<Reservation> reservations = new HashSet<Reservation>();
-    public Collection<IRoom> availableRooms = new LinkedHashSet<>();
+    //public Collection<IRoom> availableRooms = new LinkedHashSet<>();
 
     private static ReservationService reservationService = null;
     private ReservationService(){}
@@ -56,7 +56,7 @@ public class ReservationService {
 
 
     }
-    public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate){
+    /*public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate){
         Collection<IRoom> availableRooms = new HashSet<>();
         //System.out.println(availableRooms);
         if (reservations.size()==0){
@@ -83,9 +83,37 @@ public class ReservationService {
         }
         System.out.println(availableRooms);
         return availableRooms;
+    }*/
+
+    public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate) {
+        Collection<IRoom> availableRooms = new ArrayList<>();
+        for (IRoom room : rooms){
+            if (!isRoomReserved(room,checkInDate,checkOutDate)){
+                availableRooms.add(room);
+
+            }
+        }
+
+        //System.out.println(availableRooms);
+        return availableRooms;
+    }
+    public boolean isRoomReserved (IRoom room,Date checkInDate, Date checkOutDate){
+        if (reservations.isEmpty())return false;
+        for (Reservation reservations : reservations){
+            IRoom  resRoom = reservations.getRoom();
+            if (resRoom.getRoomNumber().equals(room.getRoomNumber())){
+                if (isDateWithinRande(checkInDate,checkOutDate,reservations)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    boolean isDateWithinRande(Date checkIndate, Date checkOurData, Reservation reservation){
+        return !(checkOurData.before(reservation.getCheckInDate())|| checkIndate.after(reservation.getCheckOutDate()));
     }
 
-     public Collection<Reservation> getCustomerReservation(Customer customer){
+    public Collection<Reservation> getCustomerReservation(Customer customer){
         Collection<Reservation> customerRes = new ArrayList<>();
         for (Reservation customerResvs:reservations){
             if (customerResvs.getCustomer().equals(customer)){
