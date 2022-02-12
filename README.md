@@ -8,7 +8,8 @@ User can enter commenads to search for available rooms, book rooms, and so on.
 main businees logic for this app.
 ## 3. Java collections
 the data of this app is stored in the Java collections (In-Memory Storage), such as users' names, room availability and so on.
-![image](https://user-images.githubusercontent.com/80197392/152664561-ffb4b772-88a8-4d1b-881a-095636912b12.png)
+![Untitled Workspace](https://user-images.githubusercontent.com/80197392/153729514-51142a9a-aa18-4275-b7ca-b36f626eb7ca.png)
+
 
 # Application architecture
 ## 1. User interface (UI)
