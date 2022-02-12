@@ -17,5 +17,9 @@ Hotel custmor will use the *main menu* to bool a room, and the administrator use
 ## 2. Resourves
 Resourse layer will act as Application programming Interface (API) to the UI layer.
 ## 3. Services
-
+Servics layer will commnicate with resourced and each other to build the vusiness logic and provide feedback to UI.
 ## 4. Data models
+Data models will be used to represent the domain that use within the system (e.g.,rooms, reservations,and customers).
+
+<img width="1159" alt="截屏2022-02-12 下午5 24 34" src="https://user-images.githubusercontent.com/80197392/153730465-9921d808-02a3-48af-a0aa-ca5173d4b74b.png">
+
