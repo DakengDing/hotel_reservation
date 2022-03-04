@@ -1,7 +1,8 @@
 # hotel_reservation
 This is a Hotel reservation application, it can help customer find a desired rooms and book them. 
-![image](https://user-images.githubusercontent.com/80197392/156843786-b2e80e84-eae5-4ad4-bafd-cb30244ff9d2.png)
 
+
+![108933613-3718ac80-762a-11eb-97eb-69d3739d6413](https://user-images.githubusercontent.com/80197392/156843864-63b96884-d502-493c-be34-bb8c75d7f9b2.gif)
 
 # Main Components of the App
 ## 1. CLI for the User Interface. 
